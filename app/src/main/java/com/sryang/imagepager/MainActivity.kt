@@ -36,8 +36,18 @@ class MainActivity : ComponentActivity() {
                                 "http://sarang628.iptime.org:89/review_images/0/0/2023-09-14/10_45_42_899.jpg",
                                 "http://sarang628.iptime.org:89/review_images/0/0/2023-09-14/10_45_42_943.jpg",
                                 "http://sarang628.iptime.org:89/review_images/0/0/2023-09-14/10_45_43_007.jpg"
-                                ),
-                            position = 5
+                            ),
+                            position = 0,
+                            date = "MAY 10 AT 6:40 PM",
+                            likeCount = "1.7K",
+                            name = "Torang",
+                            contents = "contents",
+                            commentCount = "762 comments",
+                            onName = {},
+                            onDate = {},
+                            onContents = {},
+                            onLike = {},
+                            onComment = {}
                         ) { url ->
                             ZoomableTorangAsyncImage(
                                 model = url,

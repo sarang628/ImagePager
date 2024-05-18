@@ -2,6 +2,7 @@ package com.sryang.imagepager
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +38,16 @@ import com.sryang.library.R
 fun ImagePager(
     list: List<String>,
     position: Int = 0,
+    date: String, // MAY 10 AT 6:40 PM,
+    likeCount: String, //"1.7K"
+    name: String, // Torang
+    contents: String, // contents,
+    commentCount: String,//"762 comments"
+    onName: (() -> Unit)? = null,
+    onDate: (() -> Unit)? = null,
+    onContents: (() -> Unit)? = null,
+    onLike: (() -> Unit)? = null,
+    onComment: (() -> Unit)? = null,
     image: @Composable (String) -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = {
@@ -73,20 +84,36 @@ fun ImagePager(
                     image.invoke(list[it])
                 }
 
-                Column(modifier = Modifier.align(Alignment.BottomStart).padding(start = 12.dp, end = 12.dp)) {
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(start = 12.dp, end = 12.dp)
+                ) {
                     Text(
-                        modifier = Modifier.layoutId("name"),
-                        text = "Torang", color = Color.White, fontWeight = FontWeight.Bold
+                        modifier = Modifier
+                            .layoutId("name")
+                            .clickable {
+                                onName?.invoke()
+                            },
+                        text = name, color = Color.White, fontWeight = FontWeight.Bold
                     )
 
                     Text(
-                        modifier = Modifier.layoutId("contents"),
-                        text = "Contents", color = Color.White, fontSize = 12.sp
+                        modifier = Modifier
+                            .layoutId("contents")
+                            .clickable {
+                                onContents?.invoke()
+                            },
+                        text = contents, color = Color.White, fontSize = 12.sp
                     )
 
                     Text(
-                        modifier = Modifier.layoutId("date"),
-                        text = "MAY 10 AT 6:40 PM", color = Color.LightGray, fontSize = 12.sp
+                        modifier = Modifier
+                            .layoutId("date")
+                            .clickable {
+                                onDate?.invoke()
+                            },
+                        text = date, color = Color.LightGray, fontSize = 12.sp
                     )
                     Box(
                         modifier = Modifier
@@ -94,18 +121,26 @@ fun ImagePager(
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                modifier = Modifier.size(15.dp),
+                                modifier = Modifier
+                                    .size(15.dp)
+                                    .clickable {
+                                        onLike?.invoke()
+                                    },
                                 painter = painterResource(id = R.drawable.heart_filled),
                                 contentDescription = "",
                                 tint = Color.Red
                             )
                             Spacer(modifier = Modifier.width(3.dp))
-                            Text(text = "1.7K", color = Color.White, fontSize = 12.sp)
+                            Text(text = likeCount, color = Color.White, fontSize = 12.sp)
                         }
                         Text(
-                            text = "762 comments",
+                            text = commentCount,
                             color = Color.White,
-                            modifier = Modifier.align(Alignment.CenterEnd), fontSize = 12.sp
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .clickable {
+                                    onComment?.invoke()
+                                }, fontSize = 12.sp
                         )
                     }
                 }
@@ -141,7 +176,19 @@ fun imagePagerConstraintSet(): ConstraintSet {
 @Preview
 @Composable
 fun PreviewImagePager() {
-    ImagePager(list = listOf()) {
-
-    }
+    ImagePager(
+        list = listOf(),
+        position = 0,
+        date = "MAY 10 AT 6:40 PM",
+        likeCount = "1.7K",
+        name = "Torang",
+        contents = "contents",
+        commentCount = "762 comments",
+        image = { },
+        onName = {},
+        onDate = {},
+        onContents = {},
+        onLike = {},
+        onComment = {}
+    )
 }
