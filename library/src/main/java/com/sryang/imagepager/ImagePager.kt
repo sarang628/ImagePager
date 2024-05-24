@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,21 +39,20 @@ import com.sryang.library.R
 fun ImagePager(
     list: List<String>,
     position: Int = 0,
-    date: String, // MAY 10 AT 6:40 PM,
-    likeCount: String, //"1.7K"
-    name: String, // Torang
-    contents: String, // contents,
-    commentCount: String,//"762 comments"
-    onName: (() -> Unit)? = null,
-    onDate: (() -> Unit)? = null,
-    onContents: (() -> Unit)? = null,
-    onLike: (() -> Unit)? = null,
-    onComment: (() -> Unit)? = null,
+    onPage: ((Int) -> Unit)? = null,
     image: @Composable (String) -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = {
         list.size
     })
+
+    LaunchedEffect(key1 = pagerState) {
+        snapshotFlow {
+            pagerState.currentPage
+        }.collect { position ->
+            onPage?.invoke(position)
+        }
+    }
 
     LaunchedEffect(key1 = position) {
         pagerState.scrollToPage(position)
@@ -61,14 +61,12 @@ fun ImagePager(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black),
-        constraintSet = imagePagerConstraintSet()
+            .background(Color.Black)
     ) {
         Scaffold(
             Modifier
                 .fillMaxSize(),
             containerColor = Color.Transparent
-
         ) {
             Box(
                 modifier = Modifier
@@ -84,91 +82,7 @@ fun ImagePager(
                     image.invoke(list[it])
                 }
 
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(start = 12.dp, end = 12.dp)
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .layoutId("name")
-                            .clickable {
-                                onName?.invoke()
-                            },
-                        text = name, color = Color.White, fontWeight = FontWeight.Bold
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .layoutId("contents")
-                            .clickable {
-                                onContents?.invoke()
-                            },
-                        text = contents, color = Color.White, fontSize = 12.sp
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .layoutId("date")
-                            .clickable {
-                                onDate?.invoke()
-                            },
-                        text = date, color = Color.LightGray, fontSize = 12.sp
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                modifier = Modifier
-                                    .size(15.dp)
-                                    .clickable {
-                                        onLike?.invoke()
-                                    },
-                                painter = painterResource(id = R.drawable.heart_filled),
-                                contentDescription = "",
-                                tint = Color.Red
-                            )
-                            Spacer(modifier = Modifier.width(3.dp))
-                            Text(text = likeCount, color = Color.White, fontSize = 12.sp)
-                        }
-                        Text(
-                            text = commentCount,
-                            color = Color.White,
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .clickable {
-                                    onComment?.invoke()
-                                }, fontSize = 12.sp
-                        )
-                    }
-                }
             }
-        }
-    }
-}
-
-fun imagePagerConstraintSet(): ConstraintSet {
-    return ConstraintSet {
-        val imagePager = createRefFor("imagePager")
-        val name = createRefFor("name")
-        val date = createRefFor("date")
-        val contents = createRefFor("contents")
-
-        constrain(imagePager) {
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            top.linkTo(parent.top)
-            bottom.linkTo(parent.bottom)
-        }
-
-        constrain(contents) {
-            top.linkTo(name.bottom)
-        }
-
-        constrain(date) {
-            top.linkTo(contents.bottom)
         }
     }
 }
@@ -179,16 +93,6 @@ fun PreviewImagePager() {
     ImagePager(
         list = listOf(),
         position = 0,
-        date = "MAY 10 AT 6:40 PM",
-        likeCount = "1.7K",
-        name = "Torang",
-        contents = "contents",
-        commentCount = "762 comments",
         image = { },
-        onName = {},
-        onDate = {},
-        onContents = {},
-        onLike = {},
-        onComment = {}
     )
 }
