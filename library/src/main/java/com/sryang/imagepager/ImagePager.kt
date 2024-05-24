@@ -40,6 +40,7 @@ fun ImagePager(
     list: List<String>,
     position: Int = 0,
     onPage: ((Int) -> Unit)? = null,
+    backgroundColor: Color = Color.Black,
     image: @Composable (String) -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = {
@@ -58,32 +59,19 @@ fun ImagePager(
         pagerState.scrollToPage(position)
     }
 
-    ConstraintLayout(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(backgroundColor),
     ) {
-        Scaffold(
-            Modifier
-                .fillMaxSize(),
-            containerColor = Color.Transparent
+
+        HorizontalPager(
+            modifier = Modifier.align(Alignment.Center),
+            state = pagerState
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize()
-                    .background(Color.Transparent),
-            ) {
-
-                HorizontalPager(
-                    modifier = Modifier.align(Alignment.Center),
-                    state = pagerState
-                ) {
-                    image.invoke(list[it])
-                }
-
-            }
+            image.invoke(list[it])
         }
+
     }
 }
 
