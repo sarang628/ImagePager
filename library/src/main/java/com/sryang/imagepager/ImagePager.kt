@@ -75,6 +75,17 @@ fun ImagePager(
     }
 }
 
+fun provideImagePager(): @Composable (list: List<String>, position: Int?, onPage: ((Int) -> Unit)?, backgroundColor: Color?, image: @Composable (String) -> Unit) -> Unit =
+    { list, position, onPage, backgroundColor, image ->
+        ImagePager(
+            list = list,
+            position = position ?: 0,
+            onPage = onPage,
+            backgroundColor = backgroundColor ?: Color.Black,
+            image = image
+        )
+    }
+
 @Preview
 @Composable
 fun PreviewImagePager() {

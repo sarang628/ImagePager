@@ -61,4 +61,5 @@ dependencies {
     // Optional - Integration with activities
     implementation 'androidx.activity:activity-compose:1.7.1'
     implementation 'com.github.sarang628:CommonImageLoader:3172041579'
+    implementation 'com.github.sarang628:ImagePager:de9cbcccc8'
 }
