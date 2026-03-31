@@ -10,9 +10,15 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        maven("https://jitpack.io")
+    }
+    versionCatalogs {
+        create("libs") {
+            from(files("gradle/TorangToml/libs.versions.toml"))
+        }
     }
 }
+
 rootProject.name = "ImagePager"
-include ':app'
-include ':library'
+include(":app")
+include(":library")
